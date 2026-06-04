@@ -230,3 +230,54 @@ export const canDeleteUser = (userIdToDelete, currentUserId) => {
   }
   return { isValid: true, error: '' };
 };
+
+/**
+ * Valida el formulario de pago y facturación (Checkout Completo)
+ */
+export const validateCheckoutForm = ({ tipoPago, numeroPago, nombreTitular, fechaExpiracion, cvv, sucursalId, tipoComprobante, ruc, razonSocial, direccion }) => {
+  const errors = {};
+
+  // 1. Validar Datos de Entrega/Facturación
+  if (!sucursalId || sucursalId.trim() === '') {
+    errors.sucursalId = 'Debe seleccionar una sucursal.';
+  }
+  if (!direccion || direccion.trim().length < 5) {
+    errors.direccion = 'Ingrese una dirección de facturación/entrega válida.';
+  }
+
+  // 2. Validar Tipo de Comprobante
+  if (tipoComprobante === 'FACTURA') {
+    if (!ruc || !/^(10|20)\d{9}$/.test(ruc.trim())) {
+      errors.ruc = 'El RUC debe tener 11 dígitos y comenzar con 10 o 20.';
+    }
+    if (!razonSocial || razonSocial.trim() === '') {
+      errors.razonSocial = 'La Razón Social es obligatoria para Factura.';
+    }
+  }
+
+  // 3. Validar Pasarela de Pago Simulada
+  if (tipoPago === 'YAPE') {
+    if (!numeroPago || !/^9\d{8}$/.test(numeroPago.trim())) {
+      errors.numeroPago = 'Número de Yape inválido. Debe tener 9 dígitos y comenzar con 9.';
+    }
+  } else if (tipoPago === 'TARJETA') {
+    // Validar Número
+    if (!numeroPago || !/^\d{16}$/.test(numeroPago.replace(/\s+/g, ''))) {
+      errors.numeroPago = 'Número de tarjeta inválido (16 dígitos).';
+    }
+    // Validar Nombre
+    if (!nombreTitular || nombreTitular.trim().length < 3) {
+      errors.nombreTitular = 'El nombre del titular es obligatorio.';
+    }
+    // Validar Fecha (MM/AA)
+    if (!fechaExpiracion || !/^(0[1-9]|1[0-2])\/([0-9]{2})$/.test(fechaExpiracion.trim())) {
+      errors.fechaExpiracion = 'Formato inválido. Use MM/AA (ej. 12/25).';
+    }
+    // Validar CVV (3 o 4 dígitos para Amex)
+    if (!cvv || !/^\d{3,4}$/.test(cvv.trim())) {
+      errors.cvv = 'CVV inválido (3 o 4 dígitos).';
+    }
+  }
+
+  return errors;
+};
