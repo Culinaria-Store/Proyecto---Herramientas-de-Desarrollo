@@ -278,3 +278,4 @@ export const validateCheckoutForm = ({ tipoPago, numeroPago, nombreTitular, fech
 export const formatPrice = (price) => {
   return `S/ ${parseFloat(price).toFixed(2)}`;
 };
+//mofigique esto
