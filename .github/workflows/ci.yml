@@ -1,0 +1,20 @@
+name: CI Culinaria Store
+
+on:
+  push:
+    branches: [ "feature/frontend", "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Instalar dependencias backend
+        run: cd backend && npm install
+
+      - name: Instalar dependencias frontend
+        run: cd frontend && npm install
+
+      - name: Build frontend
+        run: cd frontend && npm run build
