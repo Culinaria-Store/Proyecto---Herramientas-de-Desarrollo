@@ -75,20 +75,22 @@ export default function Login() {
     setServerError('');
     
     try {
-      const res = await apiClient.post('/auth/login', form);
+      // 1. Iniciar sesión apuntando correctamente a 'auth/login' sin barra inicial
+      const res = await apiClient.post('auth/login', form);
       login(res.data.user, res.data.token);
       
-      // Recuperar carrito de la DB
+      // 2. Recuperar carrito de la DB apuntando limpiamente a 'carrito'
       try {
-        const cart = await apiClient.get('/carrito');
-        if (cart.data.length) {
-          localStorage.setItem('cart', JSON.stringify(cart.data));
+        const cartResponse = await apiClient.get('carrito');
+        if (cartResponse.data && cartResponse.data.length) {
+          localStorage.setItem('cart', JSON.stringify(cartResponse.data));
           window.dispatchEvent(new Event('cartUpdated'));
         }
       } catch (err) {
         console.error('Error al cargar carrito:', err);
       }
       
+      // 3. Redirección fluida controlada por React Router
       navigate('/');
     } catch (err) {
       setServerError(err.response?.data?.message || 'Correo o contraseña incorrectos.');
@@ -184,7 +186,7 @@ const s = {
     borderRadius: 8,
     fontSize: '0.9rem',
     outline: 'none',
-    boxSizing: 'border-box',
+    boxSizing: 'box-sizing',
     fontFamily: 'inherit',
     transition: 'border-color 0.2s'
   },
