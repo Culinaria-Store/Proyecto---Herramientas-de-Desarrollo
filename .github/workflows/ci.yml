@@ -1,20 +1,42 @@
-name: CI Culinaria Store
+name: CI - Culinaria Store
 
 on:
   push:
-    branches: [ "feature/frontend", "main" ]
+    branches: [ main, feature/frontend ]
+  pull_request:
+    branches: [ main ]
 
 jobs:
-  build:
+  build-frontend:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - name: Clonar repositorio
+        uses: actions/checkout@v3
 
-      - name: Instalar dependencias backend
-        run: cd backend && npm install
+      - name: Instalar Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
 
-      - name: Instalar dependencias frontend
-        run: cd frontend && npm install
+      - name: Instalar dependencias del frontend
+        working-directory: ./frontend
+        run: npm install
 
-      - name: Build frontend
-        run: cd frontend && npm run build
+      - name: Compilar frontend
+        working-directory: ./frontend
+        run: npm run build
+
+  build-backend:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clonar repositorio
+        uses: actions/checkout@v3
+
+      - name: Instalar Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+
+      - name: Instalar dependencias del backend
+        working-directory: ./backend
+        run: npm install
