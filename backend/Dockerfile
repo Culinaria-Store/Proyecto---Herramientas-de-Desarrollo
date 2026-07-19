@@ -1,16 +1,20 @@
-FROM node:20-alpine
+# Imagen base de Node.js
+FROM node:18-alpine
 
-WORKDIR /usr/src/app
+# Directorio de trabajo dentro del contenedor
+WORKDIR /app
 
+# Copiar archivos de dependencias
 COPY package*.json ./
 
-RUN npm install --production
+# Instalar dependencias
+RUN npm install --omit=dev
 
+# Copiar el resto del código
 COPY . .
 
-# Carpeta de uploads (imágenes de productos/perfiles) por si no viene en el build context
-RUN mkdir -p uploads/perfiles
-
+# Exponer el puerto
 EXPOSE 5000
 
-CMD [ "node", "src/app.js" ]
+# Comando para iniciar el servidor
+CMD ["node", "src/app.js"]

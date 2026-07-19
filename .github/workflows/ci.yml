@@ -1,4 +1,4 @@
-name: CI - Culinaria Store
+name: CI/CD - Culinaria Store
 
 on:
   push:
@@ -26,6 +26,21 @@ jobs:
         working-directory: ./frontend
         run: npm run build
 
+      - name: Login a Docker Hub
+        if: github.ref == 'refs/heads/main'
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build y Push imagen frontend
+        if: github.ref == 'refs/heads/main'
+        uses: docker/build-push-action@v4
+        with:
+          context: ./frontend
+          push: true
+          tags: 75ambrayan/culinaria-frontend:latest
+
   build-backend:
     runs-on: ubuntu-latest
     steps:
@@ -40,3 +55,18 @@ jobs:
       - name: Instalar dependencias del backend
         working-directory: ./backend
         run: npm install
+
+      - name: Login a Docker Hub
+        if: github.ref == 'refs/heads/main'
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build y Push imagen backend
+        if: github.ref == 'refs/heads/main'
+        uses: docker/build-push-action@v4
+        with:
+          context: ./backend
+          push: true
+          tags: 75ambrayan/culinaria-backend:latest
