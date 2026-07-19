@@ -6,7 +6,7 @@ import { AuthContext } from '../context/AuthContext';
 
 const SLIDES = [
   {
-    tag: 'NUEVA COLECCIÓN 2025',
+    tag: 'NUEVA COLECCIÓN 2026 -v2.0',
     title: 'Alta Cocina,\nPura Pasión',
     desc: 'Utensilios de acero inoxidable y materiales premium para chefs que exigen lo mejor.',
     bg: 'linear-gradient(120deg,rgba(0,0,0,0.82) 45%,rgba(184,134,11,0.18) 100%),url("https://images.unsplash.com/photo-1556910103-1c02745aae4d?w=1400&q=80") center/cover no-repeat',
@@ -45,7 +45,7 @@ export default function Home() {
     return () => clearInterval(t);
   }, []);
 
-  const addToCart = async (p) => {
+  const addToCart = async (p) => {  
     if (!user) { navigate('/login'); return; }
     if (p.stock <= 0) return;
     try {
