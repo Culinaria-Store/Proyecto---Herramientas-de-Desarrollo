@@ -230,3 +230,52 @@ export const canDeleteUser = (userIdToDelete, currentUserId) => {
   }
   return { isValid: true, error: '' };
 };
+/**
+ * Valida que el carrito tenga productos antes del checkout
+ */
+export const validateCartBeforeCheckout = (items) => {
+  const errors = [];
+  if (!items || items.length === 0) {
+    errors.push('El carrito está vacío.');
+  }
+  items?.forEach(item => {
+    if (!item.cantidad || item.cantidad < 1) {
+      errors.push(`Cantidad inválida en: ${item.nombre_producto}`);
+    }
+  });
+  return errors;
+};
+
+/**
+ * Valida el formulario de checkout (pago + facturación)
+ */
+export const validateCheckoutForm = ({ tipoPago, numeroPago, nombreTitular, fechaExpiracion, cvv, direccion, tipoComprobante, ruc, razonSocial }) => {
+  const errors = {};
+
+  if (!isNotEmpty(direccion)) errors.direccion = 'La dirección es requerida';
+
+  if (tipoPago === 'TARJETA') {
+    if (!numeroPago || numeroPago.length !== 16) errors.numeroPago = 'Número de tarjeta inválido (16 dígitos)';
+    if (!isNotEmpty(nombreTitular)) errors.nombreTitular = 'El nombre del titular es requerido';
+    if (!fechaExpiracion || !/^\d{2}\/\d{2}$/.test(fechaExpiracion)) errors.fechaExpiracion = 'Formato MM/AA inválido';
+    if (!cvv || cvv.length < 3) errors.cvv = 'CVV inválido';
+  }
+
+  if (tipoPago === 'YAPE') {
+    if (!numeroPago || numeroPago.length !== 9) errors.numeroPago = 'Número Yape inválido (9 dígitos)';
+  }
+
+  if (tipoComprobante === 'FACTURA') {
+    if (!ruc || ruc.length !== 11) errors.ruc = 'RUC debe tener 11 dígitos';
+    if (!isNotEmpty(razonSocial)) errors.razonSocial = 'La razón social es requerida';
+  }
+
+  return errors;
+};
+/**
+ * Formatea un número como precio en soles
+ */
+export const formatPrice = (price) => {
+  return `S/ ${parseFloat(price).toFixed(2)}`;
+};
+//mofigique esto

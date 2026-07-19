@@ -22,7 +22,7 @@ apiClient.interceptors.request.use(
     return config;
   },
   (error) => Promise.reject(error)
-);
+);  
 
 // Interceptor de RESPONSE — manejo global de errores
 apiClient.interceptors.response.use(
