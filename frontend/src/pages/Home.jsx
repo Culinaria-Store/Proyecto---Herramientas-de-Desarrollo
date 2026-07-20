@@ -7,7 +7,7 @@ import { AuthContext } from '../context/AuthContext';
 const SLIDES = [
   {
     tag: 'NUEVA COLECCIÓN 2026',
-    title: 'Alta Cocina,\nPura Pasión',
+    title: 'La Gastronomía como Arte,\ny Emoción',
     desc: 'Utensilios de acero inoxidable y materiales premium para chefs que exigen lo mejor.',
     bg: 'linear-gradient(120deg,rgba(0,0,0,0.82) 45%,rgba(184,134,11,0.18) 100%),url("https://images.unsplash.com/photo-1556910103-1c02745aae4d?w=1400&q=80") center/cover no-repeat',
   },
